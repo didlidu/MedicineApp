@@ -3,16 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.bunjlabs</groupId>
-    <artifactId>MedicineApp</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>MedicineApp2</artifactId>
+    <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>MedicineApp</name>
+    <name>MedicineApp2</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <mainClass>com.bunjlabs.medicineapp.MainApp</mainClass>
     </properties>
+
+    <organization>
+        <!-- Used as the 'Vendor' for JNLP generation -->
+        <name>Your Organisation</name>
+    </organization>
 
     <build>
         <plugins>
@@ -119,6 +124,11 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.6.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.controlsfx</groupId>
+            <artifactId>controlsfx</artifactId>
+            <version>8.40.10</version>
         </dependency>
     </dependencies>
 </project>

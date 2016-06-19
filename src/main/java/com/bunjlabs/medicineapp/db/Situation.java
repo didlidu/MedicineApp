@@ -13,30 +13,30 @@ public class Situation {
     private long growth;
     private long weight;
 
-    public Situation( long deseaseId, String fio, long age, long growth, long weight) {
+    public Situation(long deseaseId, String fio, long age, long growth, long weight) {
         this.deseaseId = deseaseId;
         this.fio = fio;
         this.age = age;
         this.growth = growth;
         this.weight = weight;
     }
-    
+
     public Situation() {
     }
 
-    public boolean insert() {
+    public long insert() {
         String query = "INSERT INTO situations VALUES (NULL, :deseaseId, :fio, :age, :growth, :weight)";
         try (Connection con = Database.getInstance().getDB().open()) {
-            return con.createQuery(query)
+            return (int) con.createQuery(query)
                     .addParameter("deseaseId", deseaseId)
                     .addParameter("fio", fio)
                     .addParameter("age", age)
                     .addParameter("growth", growth)
                     .addParameter("weight", weight)
-                    .executeUpdate().getKey() != null;
+                    .executeUpdate().getKey();
         }
     }
-    
+
     public static List<SituationHuman> selectAll() {
         String query = "SELECT * FROM situations";
         List<Situation> situations;
@@ -63,6 +63,7 @@ public class Situation {
     }
 
     public static class SituationHuman {
+
         public long id;
         public String desease;
         public String fio;
@@ -73,6 +74,67 @@ public class Situation {
         public List<String> factors;
         public List<String> coDeseases;
         public List<String> specials;
+
+        public Situation insertSituation() {
+            Situation s = new Situation();
+            s.id = id;
+            s.deseaseId = Primitive.insertOrGet("deseases", desease).getId();
+            s.fio = fio;
+            s.age = age;
+            s.growth = growth;
+            s.weight = weight;
+
+            List<Long> plans = new ArrayList<>();
+
+            plan.forEach((el) -> {
+                Primitive medicine = Primitive.insertOrGet("medicines", el);
+                plans.add(medicine.getId());
+            });
+
+            List<Long> factorss = new ArrayList<>();
+
+            factors.forEach((el) -> {
+                Primitive factor = Primitive.insertOrGet("factors", el);
+                factorss.add(factor.getId());
+            });
+            List<Long> coDeseasess = new ArrayList<>();
+
+            coDeseases.forEach((el) -> {
+                Primitive desease2 = Primitive.insertOrGet("deseases", el);
+                coDeseasess.add(desease2.getId());
+            });
+
+            List<Long> specialss = new ArrayList<>();
+
+            specials.forEach((el) -> {
+                Primitive special = Primitive.insertOrGet("specials", el);
+                specialss.add(special.getId());
+            });
+
+            s.id = s.insert();
+
+            plans.forEach((bid) -> {
+                Binding b = new Binding("plan_bindings", s.id, bid);
+                b.insert();
+            });
+
+            factorss.forEach((bid) -> {
+                Binding b = new Binding("factor_bindings", s.id, bid);
+                b.insert();
+            });
+
+            coDeseasess.forEach((bid) -> {
+                Binding b = new Binding("codesease_bindings", s.id, bid);
+                b.insert();
+            });
+
+            specialss.forEach((bid) -> {
+                Binding b = new Binding("special_bindings", s.id, bid);
+                b.insert();
+            });
+
+            return s;
+        }
     }
 
 }

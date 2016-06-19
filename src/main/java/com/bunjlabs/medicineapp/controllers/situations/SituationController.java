@@ -2,6 +2,7 @@ package com.bunjlabs.medicineapp.controllers.situations;
 
 import com.bunjlabs.medicineapp.db.Situation;
 import com.bunjlabs.medicineapp.db.Situation.SituationHuman;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,10 +12,14 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Stage;
 
 public class SituationController implements Initializable {
 
@@ -29,7 +34,7 @@ public class SituationController implements Initializable {
 
         TableColumn deseaseCol = new TableColumn("Диагноз");
         deseaseCol.setCellValueFactory(
-                new PropertyValueFactory<SituationHumanFx, String>("name"));
+                new PropertyValueFactory<SituationHumanFx, String>("desease"));
 
         TableColumn fioCol = new TableColumn("ФИО");
         fioCol.setCellValueFactory(
@@ -76,6 +81,11 @@ public class SituationController implements Initializable {
                 specialsCol
         );
 
+        refreshTable();
+    }
+
+    private void refreshTable() {
+
         List<SituationHuman> shs = Situation.selectAll();
 
         List<SituationHumanFx> shfx = new ArrayList<>();
@@ -84,24 +94,40 @@ public class SituationController implements Initializable {
 
         table.setItems(FXCollections.observableList(shfx));
     }
+    protected SituationHuman situationAddReturnValue;
 
     @FXML
-    public void handleAdd(ActionEvent event) {
+    public void handleAdd(ActionEvent event) throws IOException {
+        FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("/fxml/situationedit.fxml"));
+        Parent root = fXMLLoader.load();
+        SituationEditController controller = fXMLLoader.getController();
+        controller.situationController = this;
+        Stage stage = new Stage();
+        stage.setTitle("Добавление ситуации");
+        stage.setScene(new Scene(root));
+        stage.setResizable(false);
+        stage.showAndWait();
 
+        if (situationAddReturnValue != null) {
+            situationAddReturnValue.insertSituation();
+            situationAddReturnValue = null;
+
+            refreshTable();
+        }
     }
 
-    private static final class SituationHumanFx {
+    public static final class SituationHumanFx {
 
-        private final SimpleLongProperty id;
-        private final SimpleStringProperty desease;
-        private final SimpleStringProperty fio;
-        private final SimpleLongProperty age;
-        private final SimpleLongProperty growth;
-        private final SimpleLongProperty weight;
-        private final SimpleStringProperty plan;
-        private final SimpleStringProperty factors;
-        private final SimpleStringProperty coDeseases;
-        private final SimpleStringProperty specials;
+        public SimpleLongProperty id;
+        public SimpleStringProperty desease;
+        public SimpleStringProperty fio;
+        public SimpleLongProperty age;
+        public SimpleLongProperty growth;
+        public SimpleLongProperty weight;
+        public SimpleStringProperty plan;
+        public SimpleStringProperty factors;
+        public SimpleStringProperty coDeseases;
+        public SimpleStringProperty specials;
 
         public SituationHumanFx(SituationHuman sh) {
             this.id = new SimpleLongProperty(sh.id);
@@ -115,6 +141,86 @@ public class SituationController implements Initializable {
             this.coDeseases = new SimpleStringProperty(String.join(", ", sh.coDeseases));
             this.specials = new SimpleStringProperty(String.join(", ", sh.specials));
 
+        }
+
+        public Long getId() {
+            return id.get();
+        }
+
+        public String getDesease() {
+            return desease.get();
+        }
+
+        public String getFio() {
+            return fio.get();
+        }
+
+        public Long getAge() {
+            return age.get();
+        }
+
+        public Long getGrowth() {
+            return growth.get();
+        }
+
+        public Long getWeight() {
+            return weight.get();
+        }
+
+        public String getPlan() {
+            return plan.get();
+        }
+
+        public String getFactors() {
+            return factors.get();
+        }
+
+        public String getCoDeseases() {
+            return coDeseases.get();
+        }
+
+        public String getSpecials() {
+            return specials.get();
+        }
+
+        public void setId(SimpleLongProperty id) {
+            this.id = id;
+        }
+
+        public void setDesease(SimpleStringProperty desease) {
+            this.desease = desease;
+        }
+
+        public void setFio(SimpleStringProperty fio) {
+            this.fio = fio;
+        }
+
+        public void setAge(SimpleLongProperty age) {
+            this.age = age;
+        }
+
+        public void setGrowth(SimpleLongProperty growth) {
+            this.growth = growth;
+        }
+
+        public void setWeight(SimpleLongProperty weight) {
+            this.weight = weight;
+        }
+
+        public void setPlan(SimpleStringProperty plan) {
+            this.plan = plan;
+        }
+
+        public void setFactors(SimpleStringProperty factors) {
+            this.factors = factors;
+        }
+
+        public void setCoDeseases(SimpleStringProperty coDeseases) {
+            this.coDeseases = coDeseases;
+        }
+
+        public void setSpecials(SimpleStringProperty specials) {
+            this.specials = specials;
         }
     }
 
