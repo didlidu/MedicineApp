@@ -49,6 +49,10 @@ public class MainController implements Initializable {
     @FXML
     private AnchorPane content;
 
+    public MainController(User user) {
+        this.user = user;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -72,10 +76,6 @@ public class MainController implements Initializable {
     public void handleExit(ActionEvent event) {
         Stage stage = (Stage) content.getScene().getWindow();
         stage.close();
-    }
-
-    void setUser(User user) {
-        this.user = user;
     }
 
     private class PageChangeListener implements ChangeListener<LeftPage> {

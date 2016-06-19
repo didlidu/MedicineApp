@@ -72,18 +72,13 @@ public class LoginController implements Initializable {
 
         try {
 
-            Stage stage = new Stage();
-
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("fxml/main.fxml"));
-
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/fxml/main.fxml"));
+            fxmlLoader.setController(new MainController(u));
             Parent mainRoot = (Parent) fxmlLoader.load();
 
-            MainController controller = fxmlLoader.<MainController>getController();
-            controller.setUser(u);
-
-            Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/fxml/main.fxml")));
+            Stage stage = new Stage();
             stage.setTitle("Медицина Апп");
-            stage.setScene(scene);
+            stage.setScene(new Scene(mainRoot));
             stage.show();
         } catch (IOException ex) {
             log.catching(ex);
