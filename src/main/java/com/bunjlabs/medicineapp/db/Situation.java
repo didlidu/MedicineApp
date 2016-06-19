@@ -7,15 +7,13 @@ import org.sql2o.Connection;
 public class Situation {
 
     private long id;
-    private String name;
     private long deseaseId;
     private String fio;
     private long age;
     private long growth;
     private long weight;
 
-    public Situation(String name, long deseaseId, String fio, long age, long growth, long weight) {
-        this.name = name;
+    public Situation( long deseaseId, String fio, long age, long growth, long weight) {
         this.deseaseId = deseaseId;
         this.fio = fio;
         this.age = age;
@@ -27,10 +25,9 @@ public class Situation {
     }
 
     public boolean insert() {
-        String query = "INSERT INTO situations VALUES (NULL, :name, :deseaseId, :fio, :age, :growth, :weight)";
+        String query = "INSERT INTO situations VALUES (NULL, :deseaseId, :fio, :age, :growth, :weight)";
         try (Connection con = Database.getInstance().getDB().open()) {
             return con.createQuery(query)
-                    .addParameter("name", name)
                     .addParameter("deseaseId", deseaseId)
                     .addParameter("fio", fio)
                     .addParameter("age", age)
@@ -40,7 +37,7 @@ public class Situation {
         }
     }
     
-    public List<SituationHuman> selectAll() {
+    public static List<SituationHuman> selectAll() {
         String query = "SELECT * FROM situations";
         List<Situation> situations;
         List<SituationHuman> situationsHuman;
@@ -50,7 +47,6 @@ public class Situation {
             situations.forEach((el) -> {
                 SituationHuman sh = new SituationHuman();
                 sh.id = el.id;
-                sh.name = el.name;
                 sh.desease = new Primitive("deseases").getById(el.deseaseId).getName();
                 sh.fio = el.fio;
                 sh.age = el.age;
@@ -66,9 +62,8 @@ public class Situation {
         return situationsHuman;
     }
 
-    public class SituationHuman {
+    public static class SituationHuman {
         public long id;
-        public String name;
         public String desease;
         public String fio;
         public long age;

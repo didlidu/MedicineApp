@@ -32,8 +32,7 @@ public class Database {
     private final String situationsTable
             = "CREATE TABLE IF NOT EXISTS situations ("
             + "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-            + "    name TEXT NOT NULL,"
-            + "    desease_id INTEGER NOT NULL,"
+            + "    deseaseId INTEGER NOT NULL,"
             + "    fio VARCHAR(255) NOT NULL,"
             + "    age INTEGER  NOT NULL,"
             + "    growth INTEGER  NOT NULL,"
@@ -42,34 +41,34 @@ public class Database {
     private final String rulesTable
             = "CREATE TABLE IF NOT EXISTS rules ("
             + "    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,"
-            + "    desease_id INTEGER NOT NULL"
+            + "    deseaseId INTEGER NOT NULL"
             + ");";
 
     private final String planBindingsTable
             = "CREATE TABLE IF NOT EXISTS plan_bindings ("
             + "    id INTEGER NOT NULL,"
-            + "    situation_id INTEGER NOT NULL"
+            + "    situationId INTEGER NOT NULL"
             + ");";
     private final String factorBindingsTable
             = "CREATE TABLE IF NOT EXISTS factor_bindings ("
             + "    id INTEGER NOT NULL,"
-            + "    situation_id INTEGER NOT NULL"
+            + "    situationId INTEGER NOT NULL"
             + ");";
     private final String coDeseaseBindingsTable
             = "CREATE TABLE IF NOT EXISTS codesease_bindings ("
             + "    id INTEGER NOT NULL,"
-            + "    situation_id INTEGER NOT NULL"
+            + "    situationId INTEGER NOT NULL"
             + ");";
     private final String specialBindingsTable
             = "CREATE TABLE IF NOT EXISTS special_bindings ("
             + "    id INTEGER NOT NULL,"
-            + "    situation_id INTEGER NOT NULL"
+            + "    situationId INTEGER NOT NULL"
             + ");";
 
     private final String recomendedMedicineBindingsTable
             = "CREATE TABLE IF NOT EXISTS recomended_medicine_bindings ("
-            + "    rule_id INTEGER NOT NULL,"
-            + "    medicine_id INTEGER NOT NULL"
+            + "    ruleId INTEGER NOT NULL,"
+            + "    medicineId INTEGER NOT NULL"
             + ");";
 
     private final String usersTable

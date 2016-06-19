@@ -7,19 +7,19 @@ import org.sql2o.Connection;
 
 public class Rule {
     private long id;
-    private long desease_id;
+    private long deseaseId;
     
     public Rule(long desease_id) {
-        this.desease_id = desease_id;
+        this.deseaseId = desease_id;
     }
     
     public Rule() {
     }
     
     public boolean insert() {
-        String query = "INSERT INTO rules VALUES (NULL, :desease_id)";
+        String query = "INSERT INTO rules VALUES (NULL, :deseaseId)";
         try (Connection con = Database.getInstance().getDB().open()) {
-            return con.createQuery(query).addParameter("desease_id", desease_id).executeUpdate().getKey() != null;
+            return con.createQuery(query).addParameter("deseaseId", deseaseId).executeUpdate().getKey() != null;
         }
     }
     
@@ -33,7 +33,7 @@ public class Rule {
             rules.forEach((el) -> {
                 RuleHuman rh = new RuleHuman();
                 rh.id = el.id;
-                rh.desease = new Primitive("deseases").getById(el.desease_id).getName();
+                rh.desease = new Primitive("deseases").getById(el.deseaseId).getName();
                 rh.recomendedMedicines = getRecomendedMedicines(el.id);
                 rulesHuman.add(rh);
             });
@@ -42,10 +42,10 @@ public class Rule {
     }
     
     public List<String> getRecomendedMedicines(long ruleId) {
-        String query = "SELECT medicine_id FROM rules WHERE rule_id=:rule_id";
+        String query = "SELECT medicine_id FROM rules WHERE ruleId=:ruleId";
         List<Long> ids;
         try (Connection con = Database.getInstance().getDB().open()) {
-            ids = con.createQuery(query).addParameter("rule_id", ruleId).executeAndFetch(Long.class);
+            ids = con.createQuery(query).addParameter("ruleId", ruleId).executeAndFetch(Long.class);
         }
         return new Primitive("medicines").getNamesByIds(ids);
     }

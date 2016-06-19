@@ -28,7 +28,7 @@ public class Binding {
     }
     
     public List<Long> selectAll(long situationId) {
-        String query = "SELECT id FROM " + tableName + " WHERE situation_id=:situationId";
+        String query = "SELECT id FROM " + tableName + " WHERE situationId=:situationId";
         try (Connection con = Database.getInstance().getDB().open()) {
             return con.createQuery(query).addParameter("situationId", situationId).executeAndFetch(Long.class);
         }

@@ -41,7 +41,7 @@ public class MainController implements Initializable {
     }
     private final List<LeftPage> leftPages = new ArrayList<>();
 
-    private User user;
+    private final User user;
 
     @FXML
     private ListView leftList;
@@ -57,7 +57,7 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         try {
             if (user.getRole().equalsIgnoreCase("medic") || user.getRole().equalsIgnoreCase("admin")) {
-                leftPages.add(new LeftPage("Истории болезней", FXMLLoader.load(MainController.class.getResource("/fxml/panels/disease_history.fxml"))));
+                leftPages.add(new LeftPage("Истории болезней", FXMLLoader.load(MainController.class.getResource("/fxml/panels/situations.fxml"))));
                 leftPages.add(new LeftPage("Стандарты", FXMLLoader.load(MainController.class.getResource("/fxml/panels/standarts.fxml"))));
             }
             if (user.getRole().equalsIgnoreCase("researcher") || user.getRole().equalsIgnoreCase("admin")) {
@@ -85,6 +85,11 @@ public class MainController implements Initializable {
 
         @Override
         public void changed(ObservableValue<? extends LeftPage> observable, LeftPage oldValue, LeftPage newValue) {
+            AnchorPane.setBottomAnchor(newValue.parent, 0d);
+            AnchorPane.setTopAnchor(newValue.parent, 0d);
+            AnchorPane.setLeftAnchor(newValue.parent, 0d);
+            AnchorPane.setRightAnchor(newValue.parent, 0d);
+            
             content.getChildren().setAll(newValue.parent);
         }
     }
