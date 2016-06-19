@@ -7,6 +7,7 @@ package com.bunjlabs.medicineapp.controllers.standarts;
 
 import com.bunjlabs.medicineapp.controllers.situations.SituationController;
 import com.bunjlabs.medicineapp.controllers.situations.SituationEditController;
+import com.bunjlabs.medicineapp.db.Binding;
 import com.bunjlabs.medicineapp.db.Rule;
 import com.bunjlabs.medicineapp.db.Rule.RuleHuman;
 import com.bunjlabs.medicineapp.db.Situation;
@@ -15,6 +16,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -24,10 +26,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 
 public class StandartsController implements Initializable {
@@ -55,6 +61,30 @@ public class StandartsController implements Initializable {
                 deseaseCol,
                 medicinesCol
         );
+        
+        table.setRowFactory(new Callback<TableView<StandartHumanFx>, TableRow<StandartHumanFx>>() {
+            @Override
+            public TableRow<StandartHumanFx> call(TableView<StandartHumanFx> tableView) {
+                final TableRow<StandartHumanFx> row = new TableRow<>();
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem removeMenuItem = new MenuItem("Удалить");
+                removeMenuItem.setOnAction((ActionEvent event) -> {
+
+                    Rule.delete(row.getItem().id.get());
+                    Binding.delete2("recomended_medicine_bindings", row.getItem().id.get());
+                    
+                    refreshTable();
+                });
+                contextMenu.getItems().add(removeMenuItem);
+
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                        .then((ContextMenu) null)
+                        .otherwise(contextMenu)
+                );
+                return row;
+            }
+        });
         
         refreshTable();
     }

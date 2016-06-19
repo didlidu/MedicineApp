@@ -1,5 +1,6 @@
 package com.bunjlabs.medicineapp.controllers.situations;
 
+import com.bunjlabs.medicineapp.db.Binding;
 import com.bunjlabs.medicineapp.db.Situation;
 import com.bunjlabs.medicineapp.db.Situation.SituationHuman;
 import java.io.IOException;
@@ -7,19 +8,25 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.ContextMenu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 
 public class SituationController implements Initializable {
 
@@ -80,6 +87,33 @@ public class SituationController implements Initializable {
                 coDeseasesCol,
                 specialsCol
         );
+
+        table.setRowFactory(new Callback<TableView<SituationHumanFx>, TableRow<SituationHumanFx>>() {
+            @Override
+            public TableRow<SituationHumanFx> call(TableView<SituationHumanFx> tableView) {
+                final TableRow<SituationHumanFx> row = new TableRow<>();
+                final ContextMenu contextMenu = new ContextMenu();
+                final MenuItem removeMenuItem = new MenuItem("Удалить");
+                removeMenuItem.setOnAction((ActionEvent event) -> {
+
+                    Situation.delete(row.getItem().id.get());
+                    Binding.delete("plan_bindings", row.getItem().id.get());
+                    Binding.delete("factor_bindings", row.getItem().id.get());
+                    Binding.delete("codesease_bindings", row.getItem().id.get());
+                    Binding.delete("special_bindings", row.getItem().id.get());
+                    
+                    refreshTable();
+                });
+                contextMenu.getItems().add(removeMenuItem);
+
+                row.contextMenuProperty().bind(
+                        Bindings.when(row.emptyProperty())
+                        .then((ContextMenu) null)
+                        .otherwise(contextMenu)
+                );
+                return row;
+            }
+        });
 
         refreshTable();
     }

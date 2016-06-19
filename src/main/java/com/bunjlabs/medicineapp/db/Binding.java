@@ -3,22 +3,21 @@ package com.bunjlabs.medicineapp.db;
 import java.util.List;
 import org.sql2o.Connection;
 
-
 public class Binding {
-    
+
     private final String tableName;
     private long id1, id2;
-    
+
     public Binding(String tableName, long id1, long id2) {
         this.id1 = id1;
         this.id2 = id2;
         this.tableName = tableName;
     }
-    
+
     public Binding(String tableName) {
         this.tableName = tableName;
     }
-    
+
     public boolean insert() {
         String query = "INSERT INTO " + tableName + " VALUES (:id1, :id2)";
         try (Connection con = Database.getInstance().getDB().open()) {
@@ -26,7 +25,23 @@ public class Binding {
                     .addParameter("id2", id2).executeUpdate().getKey() != null;
         }
     }
+
+    public static void delete(String tableName, long id) {
+        String query = "DELETE FROM " + tableName + " WHERE situationId = :id";
+
+        try (Connection con = Database.getInstance().getDB().open()) {
+            con.createQuery(query).addParameter("id", id).executeUpdate();
+        }
+    }
     
+    public static void delete2(String tableName, long id) {
+        String query = "DELETE FROM " + tableName + " WHERE medicineId = :id";
+
+        try (Connection con = Database.getInstance().getDB().open()) {
+            con.createQuery(query).addParameter("id", id).executeUpdate();
+        }
+    }
+
     public List<Long> selectAll(long situationId) {
         String query = "SELECT id FROM " + tableName + " WHERE situationId=:situationId";
         try (Connection con = Database.getInstance().getDB().open()) {

@@ -37,6 +37,14 @@ public class Situation {
         }
     }
 
+    public static void delete(long id) {
+        String query = "DELETE FROM situations WHERE id = :id";
+        
+        try (Connection con = Database.getInstance().getDB().open()) {
+            con.createQuery(query).addParameter("id", id).executeUpdate();
+        }
+    }
+
     public static List<SituationHuman> selectAll() {
         String query = "SELECT * FROM situations";
         List<Situation> situations;
@@ -114,22 +122,22 @@ public class Situation {
             s.id = s.insert();
 
             plans.forEach((bid) -> {
-                Binding b = new Binding("plan_bindings", s.id, bid);
+                Binding b = new Binding("plan_bindings", bid, s.id);
                 b.insert();
             });
 
             factorss.forEach((bid) -> {
-                Binding b = new Binding("factor_bindings", s.id, bid);
+                Binding b = new Binding("factor_bindings", bid, s.id);
                 b.insert();
             });
 
             coDeseasess.forEach((bid) -> {
-                Binding b = new Binding("codesease_bindings", s.id, bid);
+                Binding b = new Binding("codesease_bindings", bid, s.id);
                 b.insert();
             });
 
             specialss.forEach((bid) -> {
-                Binding b = new Binding("special_bindings", s.id, bid);
+                Binding b = new Binding("special_bindings", bid, s.id);
                 b.insert();
             });
 
