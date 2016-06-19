@@ -16,10 +16,10 @@ public class Rule {
     public Rule() {
     }
     
-    public boolean insert() {
+    public long insert() {
         String query = "INSERT INTO rules VALUES (NULL, :deseaseId)";
         try (Connection con = Database.getInstance().getDB().open()) {
-            return con.createQuery(query).addParameter("deseaseId", deseaseId).executeUpdate().getKey() != null;
+            return (int) con.createQuery(query).addParameter("deseaseId", deseaseId).executeUpdate().getKey();
         }
     }
     
@@ -50,9 +50,28 @@ public class Rule {
         return new Primitive("medicines").getNamesByIds(ids);
     }
     
-    public class RuleHuman {
+    public static class RuleHuman {
         public long id;
         public String desease;
         public List<String> recomendedMedicines;
+        
+        public void insertRule() {
+            Rule r = new Rule();
+            r.deseaseId = Primitive.insertOrGet("deseases", desease).getId();
+            
+            List<Long> medicines = new ArrayList<>();
+
+            recomendedMedicines.forEach((el) -> {
+                Primitive medicine = Primitive.insertOrGet("medicines", el);
+                medicines.add(medicine.getId());
+            });
+            
+            r.id = r.insert();
+
+            medicines.forEach((bid) -> {
+                Binding b = new Binding("plan_bindings", r.id, bid);
+                b.insert();
+            });
+        }
     }
 }
