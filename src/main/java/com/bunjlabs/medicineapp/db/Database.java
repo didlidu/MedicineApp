@@ -35,6 +35,7 @@ public class Database {
             + "    deseaseId INTEGER NOT NULL,"
             + "    fio VARCHAR(255) NOT NULL,"
             + "    age INTEGER  NOT NULL,"
+            + "    sex INTEGER NOT NULL DEFAULT 0,"  // default is male :)
             + "    growth INTEGER  NOT NULL,"
             + "    weight INTEGER  NOT NULL"
             + ");";

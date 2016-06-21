@@ -10,6 +10,7 @@ public class Situation {
     private long deseaseId;
     private String fio;
     private long age;
+    private long sex;
     private long growth;
     private long weight;
 
@@ -25,12 +26,13 @@ public class Situation {
     }
 
     public long insert() {
-        String query = "INSERT INTO situations VALUES (NULL, :deseaseId, :fio, :age, :growth, :weight)";
+        String query = "INSERT INTO situations VALUES (NULL, :deseaseId, :fio, :age, :sex, :growth, :weight)";
         try (Connection con = Database.getInstance().getDB().open()) {
             return (int) con.createQuery(query)
                     .addParameter("deseaseId", deseaseId)
                     .addParameter("fio", fio)
                     .addParameter("age", age)
+                    .addParameter("sex", sex)
                     .addParameter("growth", growth)
                     .addParameter("weight", weight)
                     .executeUpdate().getKey();
@@ -58,6 +60,7 @@ public class Situation {
                 sh.desease = new Primitive("deseases").getById(el.deseaseId).getName();
                 sh.fio = el.fio;
                 sh.age = el.age;
+                sh.sex = el.sex == 0 ? "Муж." :  "Жен.";
                 sh.growth = el.growth;
                 sh.weight = el.weight;
                 sh.plan = new Primitive("medicines").getNamesByIds(new Binding("plan_bindings").selectAll(el.id));
@@ -78,6 +81,7 @@ public class Situation {
         public long age;
         public long growth;
         public long weight;
+        public String sex;
         public List<String> plan;
         public List<String> factors;
         public List<String> coDeseases;
@@ -89,6 +93,7 @@ public class Situation {
             s.deseaseId = Primitive.insertOrGet("deseases", desease).getId();
             s.fio = fio;
             s.age = age;
+            s.sex = sex.equals("Муж.") ? 0 : 1;
             s.growth = growth;
             s.weight = weight;
 

@@ -50,6 +50,10 @@ public class SituationController implements Initializable {
         TableColumn ageCol = new TableColumn("Возраст");
         ageCol.setCellValueFactory(
                 new PropertyValueFactory<SituationHumanFx, Long>("age"));
+        
+        TableColumn sexCol = new TableColumn("Пол");
+        sexCol.setCellValueFactory(
+                new PropertyValueFactory<SituationHumanFx, String>("sex"));
 
         TableColumn growthCol = new TableColumn("Рост");
         growthCol.setCellValueFactory(
@@ -80,6 +84,7 @@ public class SituationController implements Initializable {
                 deseaseCol,
                 fioCol,
                 ageCol,
+                sexCol,
                 growthCol,
                 weightCol,
                 planCol,
@@ -156,6 +161,7 @@ public class SituationController implements Initializable {
         public SimpleStringProperty desease;
         public SimpleStringProperty fio;
         public SimpleLongProperty age;
+        public SimpleStringProperty sex;
         public SimpleLongProperty growth;
         public SimpleLongProperty weight;
         public SimpleStringProperty plan;
@@ -168,6 +174,7 @@ public class SituationController implements Initializable {
             this.desease = new SimpleStringProperty(sh.desease);
             this.fio = new SimpleStringProperty(sh.fio);
             this.age = new SimpleLongProperty(sh.age);
+            this.sex = new SimpleStringProperty(sh.sex);
             this.growth = new SimpleLongProperty(sh.growth);
             this.weight = new SimpleLongProperty(sh.weight);
             this.plan = new SimpleStringProperty(String.join(", ", sh.plan));
@@ -191,6 +198,10 @@ public class SituationController implements Initializable {
 
         public Long getAge() {
             return age.get();
+        }
+        
+        public String getSex() {
+            return sex.get();
         }
 
         public Long getGrowth() {

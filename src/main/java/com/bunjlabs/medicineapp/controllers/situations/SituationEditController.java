@@ -6,9 +6,11 @@ import java.net.URL;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 import java.util.stream.Stream;
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
@@ -25,6 +27,8 @@ public class SituationEditController implements Initializable {
     @FXML
     private TextField weightField;
     @FXML
+    private ChoiceBox<String> sexField;
+    @FXML
     private TextField planField;
     @FXML
     private TextField factorsField;
@@ -37,7 +41,7 @@ public class SituationEditController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        sexField.setItems(FXCollections.observableArrayList("Муж.", "Жен."));
     }
 
     public void setData(SituationHuman sh) {
@@ -46,6 +50,7 @@ public class SituationEditController implements Initializable {
         ageField.setText(sh.age + "");
         growthField.setText(sh.growth + "");
         weightField.setText(sh.weight + "");
+        sexField.getSelectionModel().select(sh.sex);
         planField.setText(String.join(", ", sh.plan));
         factorsField.setText(String.join(", ", sh.factors));
         coDeseasesField.setText(String.join(", ", sh.coDeseases));
@@ -60,7 +65,7 @@ public class SituationEditController implements Initializable {
         sh.age = Long.parseLong(ageField.getText());
         sh.growth = Long.parseLong(growthField.getText());
         sh.weight = Long.parseLong(weightField.getText());
-
+        sh.sex = sexField.getSelectionModel().getSelectedItem();
         sh.plan = Arrays.asList(Stream.of(planField.getText().split(",")).map(s -> s.trim()).toArray(size -> new String[size]));
         sh.factors = Arrays.asList(Stream.of(factorsField.getText().split(",")).map(s -> s.trim()).toArray(size -> new String[size]));
         sh.coDeseases = Arrays.asList(Stream.of(coDeseasesField.getText().split(",")).map(s -> s.trim()).toArray(size -> new String[size]));
