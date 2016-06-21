@@ -1,6 +1,5 @@
 package com.bunjlabs.medicineapp.controllers.situations;
 
-import com.bunjlabs.medicineapp.db.Situation;
 import com.bunjlabs.medicineapp.db.Situation.SituationHuman;
 import java.net.URL;
 import java.util.Arrays;
@@ -63,8 +62,8 @@ public class SituationEditController implements Initializable {
         sh.desease = deseaseField.getText();
         sh.fio = fioField.getText();
         sh.age = Long.parseLong(ageField.getText());
-        sh.growth = Long.parseLong(growthField.getText());
-        sh.weight = Long.parseLong(weightField.getText());
+        sh.growth = Double.parseDouble(growthField.getText());
+        sh.weight = Double.parseDouble(weightField.getText());
         sh.sex = sexField.getSelectionModel().getSelectedItem();
         sh.plan = Arrays.asList(Stream.of(planField.getText().split(",")).map(s -> s.trim()).toArray(size -> new String[size]));
         sh.factors = Arrays.asList(Stream.of(factorsField.getText().split(",")).map(s -> s.trim()).toArray(size -> new String[size]));

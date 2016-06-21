@@ -36,8 +36,8 @@ public class Database {
             + "    fio VARCHAR(255) NOT NULL,"
             + "    age INTEGER  NOT NULL,"
             + "    sex INTEGER NOT NULL DEFAULT 0,"  // default is male :)
-            + "    growth INTEGER  NOT NULL,"
-            + "    weight INTEGER  NOT NULL"
+            + "    growth REAL  NOT NULL,"
+            + "    weight REAL  NOT NULL"
             + ");";
     private final String rulesTable
             = "CREATE TABLE IF NOT EXISTS rules ("

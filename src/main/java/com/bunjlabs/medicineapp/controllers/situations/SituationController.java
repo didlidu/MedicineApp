@@ -11,6 +11,7 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -197,8 +198,8 @@ public class SituationController implements Initializable {
         public SimpleStringProperty fio;
         public SimpleLongProperty age;
         public SimpleStringProperty sex;
-        public SimpleLongProperty growth;
-        public SimpleLongProperty weight;
+        public SimpleDoubleProperty growth;
+        public SimpleDoubleProperty weight;
         public SimpleStringProperty plan;
         public SimpleStringProperty factors;
         public SimpleStringProperty coDeseases;
@@ -210,8 +211,8 @@ public class SituationController implements Initializable {
             this.fio = new SimpleStringProperty(sh.fio);
             this.age = new SimpleLongProperty(sh.age);
             this.sex = new SimpleStringProperty(sh.sex);
-            this.growth = new SimpleLongProperty(sh.growth);
-            this.weight = new SimpleLongProperty(sh.weight);
+            this.growth = new SimpleDoubleProperty(sh.growth);
+            this.weight = new SimpleDoubleProperty(sh.weight);
             this.plan = new SimpleStringProperty(String.join(", ", sh.plan));
             this.factors = new SimpleStringProperty(String.join(", ", sh.factors));
             this.coDeseases = new SimpleStringProperty(String.join(", ", sh.coDeseases));
@@ -239,11 +240,11 @@ public class SituationController implements Initializable {
             return sex.get();
         }
 
-        public Long getGrowth() {
+        public Double getGrowth() {
             return growth.get();
         }
 
-        public Long getWeight() {
+        public Double getWeight() {
             return weight.get();
         }
 
@@ -279,11 +280,11 @@ public class SituationController implements Initializable {
             this.age = age;
         }
 
-        public void setGrowth(SimpleLongProperty growth) {
+        public void setGrowth(SimpleDoubleProperty growth) {
             this.growth = growth;
         }
 
-        public void setWeight(SimpleLongProperty weight) {
+        public void setWeight(SimpleDoubleProperty weight) {
             this.weight = weight;
         }
 

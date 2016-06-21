@@ -11,10 +11,10 @@ public class Situation {
     private String fio;
     private long age;
     private long sex;
-    private long growth;
-    private long weight;
+    private double growth;
+    private double weight;
 
-    public Situation(long deseaseId, String fio, long age, long growth, long weight) {
+    public Situation(long deseaseId, String fio, long age, double growth, double weight) {
         this.deseaseId = deseaseId;
         this.fio = fio;
         this.age = age;
@@ -79,8 +79,8 @@ public class Situation {
         public String desease;
         public String fio;
         public long age;
-        public long growth;
-        public long weight;
+        public double growth;
+        public double weight;
         public String sex;
         public List<String> plan;
         public List<String> factors;
