@@ -8,6 +8,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -50,7 +52,7 @@ public class SituationController implements Initializable {
         TableColumn ageCol = new TableColumn("Возраст");
         ageCol.setCellValueFactory(
                 new PropertyValueFactory<SituationHumanFx, Long>("age"));
-        
+
         TableColumn sexCol = new TableColumn("Пол");
         sexCol.setCellValueFactory(
                 new PropertyValueFactory<SituationHumanFx, String>("sex"));
@@ -93,6 +95,8 @@ public class SituationController implements Initializable {
                 specialsCol
         );
 
+        final SituationController that = this;
+
         table.setRowFactory(new Callback<TableView<SituationHumanFx>, TableRow<SituationHumanFx>>() {
             @Override
             public TableRow<SituationHumanFx> call(TableView<SituationHumanFx> tableView) {
@@ -106,9 +110,40 @@ public class SituationController implements Initializable {
                     Binding.delete("factor_bindings", row.getItem().id.get());
                     Binding.delete("codesease_bindings", row.getItem().id.get());
                     Binding.delete("special_bindings", row.getItem().id.get());
-                    
+
                     refreshTable();
                 });
+                final MenuItem editMenuItem = new MenuItem("Изменить");
+                editMenuItem.setOnAction((ActionEvent event) -> {
+
+                    try {
+                        FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("/fxml/situationedit.fxml"));
+                        Parent root = fXMLLoader.load();
+                        SituationEditController controller = fXMLLoader.getController();
+                        controller.setData(Situation.selectAll().stream().filter((s) -> s.id == row.getItem().id.get()).findFirst().get());
+                        controller.situationController = that;
+                        Stage stage = new Stage();
+                        stage.setTitle("Изменение ситуации");
+                        stage.setScene(new Scene(root));
+                        stage.setResizable(false);
+                        stage.showAndWait();
+
+                        if (situationAddReturnValue != null) {
+                            Situation.delete(row.getItem().id.get());
+                            Binding.delete("plan_bindings", row.getItem().id.get());
+                            Binding.delete("factor_bindings", row.getItem().id.get());
+                            Binding.delete("codesease_bindings", row.getItem().id.get());
+                            Binding.delete("special_bindings", row.getItem().id.get());
+                            situationAddReturnValue.insertSituation();
+                            situationAddReturnValue = null;
+
+                            refreshTable();
+                        }
+                    } catch (IOException ex) {
+
+                    }
+                });
+                contextMenu.getItems().add(editMenuItem);
                 contextMenu.getItems().add(removeMenuItem);
 
                 row.contextMenuProperty().bind(
@@ -199,7 +234,7 @@ public class SituationController implements Initializable {
         public Long getAge() {
             return age.get();
         }
-        
+
         public String getSex() {
             return sex.get();
         }

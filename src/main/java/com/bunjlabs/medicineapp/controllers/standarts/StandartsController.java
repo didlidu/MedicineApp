@@ -35,33 +35,32 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
-
 public class StandartsController implements Initializable {
 
     @FXML
     private TableView table;
-    
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         TableColumn idCol = new TableColumn("Ид.");
         idCol.setCellValueFactory(
                 new PropertyValueFactory<StandartHumanFx, Long>("id"));
-        
+
         TableColumn deseaseCol = new TableColumn("Диагноз");
         deseaseCol.setCellValueFactory(
                 new PropertyValueFactory<StandartHumanFx, Long>("desease"));
-        
+
         TableColumn medicinesCol = new TableColumn("Рекомендованные препараты");
         medicinesCol.setCellValueFactory(
                 new PropertyValueFactory<StandartHumanFx, Long>("medicines"));
-        
+
         table.getColumns().addAll(
                 idCol,
                 deseaseCol,
                 medicinesCol
         );
-        
+
+        final StandartsController that = this;
         table.setRowFactory(new Callback<TableView<StandartHumanFx>, TableRow<StandartHumanFx>>() {
             @Override
             public TableRow<StandartHumanFx> call(TableView<StandartHumanFx> tableView) {
@@ -72,9 +71,38 @@ public class StandartsController implements Initializable {
 
                     Rule.delete(row.getItem().id.get());
                     Binding.delete2("recomended_medicine_bindings", row.getItem().id.get());
-                    
+
                     refreshTable();
                 });
+                final MenuItem editMenuItem = new MenuItem("Изменить");
+                editMenuItem.setOnAction((ActionEvent event) -> {
+
+                    try {
+                        FXMLLoader fXMLLoader = new FXMLLoader(getClass().getResource("/fxml/standartedit.fxml"));
+                        Parent root = fXMLLoader.load();
+                        StandartEditController controller = fXMLLoader.getController();
+                        controller.setData(new Rule().selectAll().stream().filter((s) -> s.id == row.getItem().id.get()).findFirst().get());
+                        controller.standartController = that;
+                        Stage stage = new Stage();
+                        stage.setTitle("Изменение стандарта");
+                        stage.setScene(new Scene(root));
+                        stage.setResizable(false);
+                        stage.showAndWait();
+
+                        if (standartAddReturnValue != null) {
+                            Rule.delete(row.getItem().id.get());
+                            Binding.delete2("recomended_medicine_bindings", row.getItem().id.get());
+
+                            standartAddReturnValue.insertRule();
+                            standartAddReturnValue = null;
+
+                            refreshTable();
+                        }
+                    } catch (IOException ex) {
+
+                    }
+                });
+                contextMenu.getItems().add(editMenuItem);
                 contextMenu.getItems().add(removeMenuItem);
 
                 row.contextMenuProperty().bind(
@@ -85,17 +113,17 @@ public class StandartsController implements Initializable {
                 return row;
             }
         });
-        
+
         refreshTable();
     }
-    
+
     private void refreshTable() {
         List<RuleHuman> shs = new Rule().selectAll();
         List<StandartHumanFx> shfx = new ArrayList<>();
         shs.forEach((sh) -> shfx.add(new StandartHumanFx(sh)));
         table.setItems(FXCollections.observableList(shfx));
     }
-    
+
     public RuleHuman standartAddReturnValue;
 
     @FXML
@@ -116,29 +144,30 @@ public class StandartsController implements Initializable {
             refreshTable();
         }
     }
-    
+
     public class StandartHumanFx {
+
         public SimpleLongProperty id;
         public SimpleStringProperty desease;
         public SimpleStringProperty medicines;
-        
+
         public StandartHumanFx(RuleHuman rh) {
             this.id = new SimpleLongProperty(rh.id);
             this.desease = new SimpleStringProperty(rh.desease);
             this.medicines = new SimpleStringProperty(String.join(", ", rh.recomendedMedicines));
         }
-        
+
         public Long getId() {
             return id.get();
         }
-        
+
         public String getDesease() {
             return desease.get();
         }
-        
+
         public String getMedicines() {
             return medicines.get();
         }
     }
-    
+
 }
